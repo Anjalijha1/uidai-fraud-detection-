@@ -1,19 +1,19 @@
-import os
 import pandas as pd
-import tabula
+import glob
 
-# List all PDFs in the 'data' folder
-pdfs = [f"../data/" + f for f in os.listdir("../data") if f.endswith(".pdf")]
+# Get all CSV files from the data folder
+csv_files = glob.glob("../data/*.csv")
 
-all_tables = []
+if not csv_files:
+    print("❌ No CSV files found in data folder")
+    exit()
 
-for pdf in pdfs:
-    print(f"Reading {pdf} ...")
-    tables = tabula.read_pdf(pdf, pages='all', multiple_tables=True)
-    all_tables.extend(tables)
+print("Found CSV files:")
+for f in csv_files:
+    print(f)
 
-# Combine all tables into one CSV
-combined = pd.concat([t for t in all_tables if not t.empty], ignore_index=True)
-combined.to_csv("../data/uidai_data.csv", index=False)
+dfs = [pd.read_csv(f) for f in csv_files]
+combined = pd.concat(dfs, ignore_index=True)
 
-print("CSV created successfully in data folder!")
+combined.to_csv("../data/uidai_combined.csv", index=False)
+print("✅ Combined dataset saved as ../data/uidai_combined.csv")
