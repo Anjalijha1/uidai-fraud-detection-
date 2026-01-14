@@ -4,3 +4,5 @@ matplotlib
 streamlit
 tabula-py
 pdfplumber
+plotly
+scikit-learn
